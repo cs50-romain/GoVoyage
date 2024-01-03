@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plane Ticket Comparison</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10" integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC" crossorigin="anonymous"></script>
+    <title>GoVoyage</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -83,18 +84,26 @@
             <label for="destination">Destination:</label>
             <input type="text" id="destination" name="destination" placeholder="Enter destination" required>
 
-            <button type="button">Search Flights</button>
+            <label for="origin">Origin:</label>
+            <input type="text" id="origin" name="origin" placeholder="Enter origin" required>
+
+            <button hx-post="/flights" type="button">Search Flights</button>
         </form>
 
         <div id="results">
             <h2>Flight Results</h2>
-            <ul>
-                <li>Airline 1 - Departure: 12:00 PM, Arrival: 3:00 PM, Price: $300</li>
-                <li>Airline 2 - Departure: 2:00 PM, Arrival: 5:00 PM, Price: $250</li>
-                <li>Airline 3 - Departure: 4:00 PM, Arrival: 7:00 PM, Price: $200</li>
+            <ul id="flight-list">
+                {{range .Flights}}
+                    <li>{{.Airline}} - Departure: {{.Departure}}, Arrival: {{.Arrival}}, Price: {{.Price}}</li>
+                {{end}}
             </ul>
         </div>
     </div>
 </body>
-
+<script>
+    document.addEventListener('htmx:afterRequest', function (event) {
+        // Reload the page after an htmx request
+        location.reload();
+    });
+</script>
 </html>

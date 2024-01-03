@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plane Ticket Comparison</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            text-align: center;
+            background-color: #1B1B1E;
+            color: #FBFBFB;
+        }
+
+        h1 {
+            color: #F56E0F;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #FBFBFB;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+            background-color: #262626;
+            color: #FBFBFB;
+            border: 1px solid #262626;
+        }
+
+        button {
+            background-color: #F56E0F;
+            color: #FBFBFB;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #878787;
+        }
+
+        #results {
+            margin-top: 20px;
+            border-top: 2px solid #F56E0F;
+            padding-top: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            border: 1px solid #262626;
+            padding: 10px;
+            background-color: #151419;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>Plane Ticket Comparison</h1>
+        <form id="flightForm">
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate" required>
+
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate" name="endDate" required>
+
+            <label for="destination">Destination:</label>
+            <input type="text" id="destination" name="destination" placeholder="Enter destination" required>
+
+            <button type="button">Search Flights</button>
+        </form>
+
+        <div id="results">
+            <h2>Flight Results</h2>
+            <ul>
+                <li>Airline 1 - Departure: 12:00 PM, Arrival: 3:00 PM, Price: $300</li>
+                <li>Airline 2 - Departure: 2:00 PM, Arrival: 5:00 PM, Price: $250</li>
+                <li>Airline 3 - Departure: 4:00 PM, Arrival: 7:00 PM, Price: $200</li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>

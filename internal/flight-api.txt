@@ -1,0 +1,84 @@
+package flightapi
+
+import (
+	net/http
+)
+
+type FlighData struct {
+	DepartureDate string   
+	ReturnDate    string   
+	SearchDates   []string 
+	OffsetDays    int      
+	IsCheapest    bool     	
+	Price         int
+}
+
+type FlightNode struct {
+	Data	FlightData
+	right	*FlightNode
+	left	*FlightNode
+}
+
+type Flights struct {
+	Status    bool   `json:"status,omitempty"`
+	Message   string `json:"message,omitempty"`
+	Timestamp int64  `json:"timestamp,omitempty"`
+	Data      []struct {
+		DepartureDate string   `json:"departureDate,omitempty"`
+		ReturnDate    string   `json:"returnDate,omitempty"`
+		SearchDates   []string `json:"searchDates,omitempty"`
+		OffsetDays    int      `json:"offsetDays,omitempty"`
+		IsCheapest    bool     `json:"isCheapest,omitempty"`
+		Price         struct {
+			CurrencyCode string `json:"currencyCode,omitempty"`
+			Units        int    `json:"units,omitempty"`
+			Nanos        int    `json:"nanos,omitempty"`
+		} `json:"price,omitempty"`
+	} `json:"data,omitempty"`
+}
+
+PseudoCode explanation of what needs to be done
+
+GetFlights(source, destination, dates):
+	Create a flights variable of type Flights
+	Create url variable and include the parameters in the url as parameters
+	Build GET request for booking.com api: 
+	Read the body of the response
+	Check for error
+
+	Input response into flights
+	Pass flights to startQuicksort
+
+HEAPSORT IMPLEMENTATION:
+NewHeap() *FlightHeap {
+
+}
+
+heapifyDown() {
+
+}
+
+heapifyUp() {
+
+}
+
+append(flight) {
+
+}
+
+pop() *Flight {
+
+}
+
+QUICKSORT IMPLEMENTATION:
+startQuicksort(flights Flights) {
+	quicksort 
+}
+
+quicksort() {
+
+}
+
+partition() {
+
+}

@@ -13,12 +13,6 @@ type FlighData struct {
 	Price         int
 }
 
-type FlightNode struct {
-	Data	FlightData
-	right	*FlightNode
-	left	*FlightNode
-}
-
 type Flights struct {
 	Status    bool   `json:"status,omitempty"`
 	Message   string `json:"message,omitempty"`
@@ -47,27 +41,79 @@ GetFlights(source, destination, dates):
 	Check for error
 
 	Input response into flights
-	Pass flights to startQuicksort
+
+main.go:
+Create a new heap based on the result from the flightsapi package
+Once heap is created, keep popping the result into an array
+Pass the array into the flights array
+Once the client refreshes automatically, the list of flights will be displayed from cheapest to priciest.
 
 HEAPSORT IMPLEMENTATION:
+
+type FlightNode struct {
+	Data	FlightData
+	right	*FlightNode
+	left	*FlightNode
+}
+
+type FlightHeap struct {
+	Data []FlightNode
+	len  int
+}
+
 NewHeap() *FlightHeap {
-
+	return &FlightHeap([]FlightNode, 0)
 }
 
-heapifyDown() {
+(f *FlightHeap) heapifyDown(idx) {
+	if idx >= f.len {
+		return
+	}
 
+	assign idx * 2 + 1 to left_idx
+	assign idx * 2 + 2 to right_idx
+
+	if left_idx == nil {
+		return
+	}
+
+	if right_idx == nil {
+		return
+	}
+
+	assign f.Data[idx] to value
+
+	check if value is less than the value between the lowest of the left or the right idx value
+		if it swap and heapifyDown with the idx of the lowest value between the left or right
 }
 
-heapifyUp() {
+(f *FlightHeap) heapifyUp(idx int) {
+	// Base case
+	idx <= 0 -> return
 
+	assign parent_idx to (idx - 1) / 2
+	assign parent_value to f.Data[parent_idx]
+	assign value to f.Data[idx]
+
+	Check if value <= parent_value
+		if value is less than parent value:
+			Swap the value and parent_value
+			Call heapifyUp with the parent_idx as the parameter
+		else
+			return
 }
 
-append(flight) {
-
+(f *FlightHeap) append(flight FlightNode) {
+	append flight to end of f.Data
+	call f.heapifyUp with len(f.Data) - 1 as the index
+	increase f.len
 }
 
 pop() *Flight {
-
+	assign minflight from f.Data[0]
+	Decrease f.len
+	Put f.Data[f.len] to f.Data[0]
+	f.HeapifyDown
 }
 
 QUICKSORT IMPLEMENTATION:

@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var flights []flight.Flight
+var flights []flight.RequestedFlight
 
 func indexHandler(c *gin.Context) {
 	fmt.Println(flights)
@@ -35,6 +35,10 @@ func flightsHandler(c *gin.Context) {
 }
 
 func main() {
+	fmt.Println("Testing functionality of serpapi flight api")
+	flights := flight.GetFlight(flight.RequestedFlight{})
+	fmt.Println(flights.BestFlights[0])
+
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
 	log.Print("This is a test")

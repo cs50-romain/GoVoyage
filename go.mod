@@ -2,7 +2,11 @@ module cs50-romain/GoVoyage
 
 go 1.20
 
-require github.com/gin-gonic/gin v1.9.1
+require (
+	github.com/gin-gonic/gin v1.9.1
+	github.com/mitchellh/mapstructure v1.5.0
+	github.com/serpapi/google-search-results-golang v0.0.0-20230616000151-95707d993dc6
+)
 
 require (
 	github.com/bytedance/sonic v1.9.1 // indirect

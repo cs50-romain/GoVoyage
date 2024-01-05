@@ -5,30 +5,11 @@ import (
 )
 
 type FlighData struct {
+	Origin	      string
+	Destination   string
 	DepartureDate string   
 	ReturnDate    string   
-	SearchDates   []string 
-	OffsetDays    int      
-	IsCheapest    bool     	
 	Price         int
-}
-
-type Flights struct {
-	Status    bool   `json:"status,omitempty"`
-	Message   string `json:"message,omitempty"`
-	Timestamp int64  `json:"timestamp,omitempty"`
-	Data      []struct {
-		DepartureDate string   `json:"departureDate,omitempty"`
-		ReturnDate    string   `json:"returnDate,omitempty"`
-		SearchDates   []string `json:"searchDates,omitempty"`
-		OffsetDays    int      `json:"offsetDays,omitempty"`
-		IsCheapest    bool     `json:"isCheapest,omitempty"`
-		Price         struct {
-			CurrencyCode string `json:"currencyCode,omitempty"`
-			Units        int    `json:"units,omitempty"`
-			Nanos        int    `json:"nanos,omitempty"`
-		} `json:"price,omitempty"`
-	} `json:"data,omitempty"`
 }
 
 PseudoCode explanation of what needs to be done

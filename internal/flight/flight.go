@@ -2,7 +2,6 @@ package flight
 
 import (
 	"cs50-romain/GoVoyage/internal/flightapi"
-	"fmt"
 	"log"
 )
 

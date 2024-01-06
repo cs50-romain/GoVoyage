@@ -21,6 +21,7 @@ func indexHandler(c *gin.Context) {
 		"ReturnFlights": return_flights,
 		"Message": message,
 	})
+	message = ""
 }
 
 func flightsHandler(c *gin.Context) {

@@ -82,10 +82,10 @@
             <input type="date" id="endDate" name="endDate" required>
 
             <label for="destination">Destination:</label>
-            <input type="text" id="destination" name="destination" placeholder="Enter destination" required>
+            <input type="text" id="destination" name="destination" placeholder="Enter departure city" required>
 
             <label for="origin">Origin:</label>
-            <input type="text" id="origin" name="origin" placeholder="Enter origin" required>
+            <input type="text" id="origin" name="origin" placeholder="Enter arrival city" required>
 
             <button hx-post="/flights" type="button">Search Flights</button>
         </form>
@@ -94,7 +94,7 @@
             <h2>Flight Results</h2>
             <ul id="flight-list">
                 {{range .Flights}}
-                    <li>{{.Airline}} - Departure: {{.Departure}}, Arrival: {{.Arrival}}, Price: {{.Price}}</li>
+                    <li>{{.Airline}} - Departure: {{.DepartureTime}}, Arrival: {{.ArrivalTime}}, Price: {{.Price}}</li>
                 {{end}}
             </ul>
         </div>

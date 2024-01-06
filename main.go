@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"time"
+	//"time"
 
 	"cs50-romain/GoVoyage/internal/flight"
 
 	"github.com/gin-gonic/gin"
 )
 
-var flights []flight.RequestedFlight
+var flights []flight.ResponseFlights
 
 func indexHandler(c *gin.Context) {
 	fmt.Println(flights)
@@ -27,18 +27,12 @@ func flightsHandler(c *gin.Context) {
 	end := c.PostForm("endDate")
 
 	log.Printf("Origin: %s, Destination: %s\nStart Date: %s, End Date: %s\n", origin, dest, start, end)
-
-	f := flight.New("FakeAirline", time.Now().Format(time.Kitchen), time.Now().Format(time.Kitchen), 300)
-	fmt.Println(f)
-	flights = append(flights, *f)
-	//htmlElement := fmt.Sprintf(`<li>%s - Departure: %v, Arrival: %v, Price: %d`, f.Airline, f.Departure.Format(time.Kitchen), f.Arrival.Format(time.Kitchen), f.Price)
+	
+	// Need to get the flights based on use demand
+	flights = flight.GetFlights(origin, dest, start, end)
 }
 
 func main() {
-	fmt.Println("Testing functionality of serpapi flight api")
-	flights := flight.GetFlight(flight.RequestedFlight{})
-	fmt.Println(flights.BestFlights[0])
-
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
 	log.Print("This is a test")
@@ -47,3 +41,5 @@ func main() {
 	router.POST("/flights", flightsHandler)
 	router.Run()
 }
+
+

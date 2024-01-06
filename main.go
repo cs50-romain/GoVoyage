@@ -11,12 +11,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var flights []flight.ResponseFlights
+var departure_flights []flight.ResponseFlights
+var return_flights []flight.ResponseFlights
 
 func indexHandler(c *gin.Context) {
-	fmt.Println(flights)
+	fmt.Println(return_flights)
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{
-		"Flights": flights,
+		"Flights": departure_flights,
+		"ReturnFlights": return_flights,
 	})
 }
 
@@ -29,7 +31,8 @@ func flightsHandler(c *gin.Context) {
 	log.Printf("Origin: %s, Destination: %s\nStart Date: %s, End Date: %s\n", origin, dest, start, end)
 	
 	// Need to get the flights based on use demand
-	flights = flight.GetFlights(origin, dest, start, end)
+	departure_flights = flight.GetFlights(origin, dest, start, end)
+	return_flights = flight.GetFlights(dest, origin, end, end)
 }
 
 func main() {

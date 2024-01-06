@@ -91,10 +91,18 @@
         </form>
 
         <div id="results">
-            <h2>Flight Results</h2>
+            <h2>Depart Flight Results</h2>
             <ul id="flight-list">
                 {{range .Flights}}
-                    <li>{{.Airline}} - Departure: {{.DepartureTime}}, Arrival: {{.ArrivalTime}}, Price: {{.Price}}</li>
+                    <li>{{.Airline}} - Departure: {{.DepartureTime}}, Arrival: {{.ArrivalTime}}, Price: ${{.Price}}</li>
+                {{end}}
+            </ul>
+        </div>
+        <div id="return-flights-results">
+            <h2>Return Flight Results</h2>
+            <ul id="return-flight-list">
+                {{range .ReturnFlights}}
+                    <li>{{.Airline}} - Departure: {{.DepartureTime}}, Arrival: {{.ArrivalTime}}, Price: ${{.Price}}</li>
                 {{end}}
             </ul>
         </div>

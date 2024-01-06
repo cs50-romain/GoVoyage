@@ -1,126 +1,25 @@
 package flight
 
 import (
-	"encoding/json"
-	"io"
-	"log"
-	"net/http"
-	"net/url"
-
-	g "github.com/serpapi/google-search-results-golang"
-	//m "github.com/mitchellh/mapstructure"
+	"cs50-romain/GoVoyage/internal/flightapi"
+	"fmt"
 )
+
+type ResponseFlights struct {
+	Airline			string
+	DepartureAirport	string
+	DepartureTime		string
+	ArrivalAirport		string
+	ArrivalTime		string
+	Duration		int
+	Price			int
+}
 
 type RequestedFlight struct {
 	Airline		string
 	Departure	string
 	Arrival		string
 	Price		int
-}
-
-type Flights struct {
-	SearchMetadata struct {
-		ID               string  `json:"id,omitempty"`
-		Status           string  `json:"status,omitempty"`
-		JSONEndpoint     string  `json:"json_endpoint,omitempty"`
-		CreatedAt        string  `json:"created_at,omitempty"`
-		ProcessedAt      string  `json:"processed_at,omitempty"`
-		GoogleFlightsURL string  `json:"google_flights_url,omitempty"`
-		RawHTMLFile      string  `json:"raw_html_file,omitempty"`
-		PrettifyHTMLFile string  `json:"prettify_html_file,omitempty"`
-		TotalTimeTaken   float64 `json:"total_time_taken,omitempty"`
-	} `json:"search_metadata,omitempty"`
-	SearchParameters struct {
-		Engine       string `json:"engine,omitempty"`
-		Hl           string `json:"hl,omitempty"`
-		Gl           string `json:"gl,omitempty"`
-		DepartureID  string `json:"departure_id,omitempty"`
-		ArrivalID    string `json:"arrival_id,omitempty"`
-		OutboundDate string `json:"outbound_date,omitempty"`
-		ReturnDate   string `json:"return_date,omitempty"`
-		Currency     string `json:"currency,omitempty"`
-	} `json:"search_parameters,omitempty"`
-	BestFlights []struct {
-		Flights []struct {
-			DepartureAirport struct {
-				Name string `json:"name,omitempty"`
-				ID   string `json:"id,omitempty"`
-				Time string `json:"time,omitempty"`
-			} `json:"departure_airport,omitempty"`
-			ArrivalAirport struct {
-				Name string `json:"name,omitempty"`
-				ID   string `json:"id,omitempty"`
-				Time string `json:"time,omitempty"`
-			} `json:"arrival_airport,omitempty"`
-			Duration         int      `json:"duration,omitempty"`
-			Airplane         string   `json:"airplane,omitempty"`
-			Airline          string   `json:"airline,omitempty"`
-			AirlineLogo      string   `json:"airline_logo,omitempty"`
-			TravelClass      string   `json:"travel_class,omitempty"`
-			FlightNumber     string   `json:"flight_number,omitempty"`
-			TicketAlsoSoldBy []string `json:"ticket_also_sold_by,omitempty"`
-			Legroom          string   `json:"legroom,omitempty"`
-			Extensions       []string `json:"extensions,omitempty"`
-			Overnight        bool     `json:"overnight,omitempty"`
-		} `json:"flights,omitempty"`
-		TotalDuration   int `json:"total_duration,omitempty"`
-		CarbonEmissions struct {
-			ThisFlight          int `json:"this_flight,omitempty"`
-			TypicalForThisRoute int `json:"typical_for_this_route,omitempty"`
-			DifferencePercent   int `json:"difference_percent,omitempty"`
-		} `json:"carbon_emissions,omitempty"`
-		Price          int      `json:"price,omitempty"`
-		Type           string   `json:"type,omitempty"`
-		AirlineLogo    string   `json:"airline_logo,omitempty"`
-		Extensions     []string `json:"extensions,omitempty"`
-		DepartureToken string   `json:"departure_token,omitempty"`
-	} `json:"best_flights,omitempty"`
-	OtherFlights []struct {
-		Flights []struct {
-			DepartureAirport struct {
-				Name string `json:"name,omitempty"`
-				ID   string `json:"id,omitempty"`
-				Time string `json:"time,omitempty"`
-			} `json:"departure_airport,omitempty"`
-			ArrivalAirport struct {
-				Name string `json:"name,omitempty"`
-				ID   string `json:"id,omitempty"`
-				Time string `json:"time,omitempty"`
-			} `json:"arrival_airport,omitempty"`
-			Duration         int      `json:"duration,omitempty"`
-			Airplane         string   `json:"airplane,omitempty"`
-			Airline          string   `json:"airline,omitempty"`
-			AirlineLogo      string   `json:"airline_logo,omitempty"`
-			TravelClass      string   `json:"travel_class,omitempty"`
-			FlightNumber     string   `json:"flight_number,omitempty"`
-			TicketAlsoSoldBy []string `json:"ticket_also_sold_by,omitempty"`
-			Legroom          string   `json:"legroom,omitempty"`
-			Extensions       []string `json:"extensions,omitempty"`
-			Overnight        bool     `json:"overnight,omitempty"`
-		} `json:"flights,omitempty"`
-		Layovers []struct {
-			Duration int    `json:"duration,omitempty"`
-			Name     string `json:"name,omitempty"`
-			ID       string `json:"id,omitempty"`
-		} `json:"layovers,omitempty"`
-		TotalDuration   int `json:"total_duration,omitempty"`
-		CarbonEmissions struct {
-			ThisFlight          int `json:"this_flight,omitempty"`
-			TypicalForThisRoute int `json:"typical_for_this_route,omitempty"`
-			DifferencePercent   int `json:"difference_percent,omitempty"`
-		} `json:"carbon_emissions,omitempty"`
-		Price          int      `json:"price,omitempty"`
-		Type           string   `json:"type,omitempty"`
-		AirlineLogo    string   `json:"airline_logo,omitempty"`
-		Extensions     []string `json:"extensions,omitempty"`
-		DepartureToken string   `json:"departure_token,omitempty"`
-	} `json:"other_flights,omitempty"`
-	PriceInsights struct {
-		LowestPrice       int     `json:"lowest_price,omitempty"`
-		PriceLevel        string  `json:"price_level,omitempty"`
-		TypicalPriceRange []int   `json:"typical_price_range,omitempty"`
-		PriceHistory      [][]int `json:"price_history,omitempty"`
-	} `json:"price_insights,omitempty"`
 }
 
 func New(airline string, departure, arrival string, price int) *RequestedFlight {
@@ -132,70 +31,85 @@ func New(airline string, departure, arrival string, price int) *RequestedFlight 
 	}
 }
 
-// API Stuff
+func GetFlights(departure_city, arrival_city, departure_date, return_date string) []ResponseFlights {
+	departure_airport_code := GetCityAirportCode(departure_city)
+	arrival_airport_code := GetCityAirportCode(arrival_city)
+	all_flights_api_response := flightapi.GetFlights(departure_airport_code, arrival_airport_code, "2024-01-10", "2024-01-20")
 
-func GetFlight(flight RequestedFlight) *Flights {
-	var flights Flights
-	parameter := map[string]string{
-	    "engine": "google_flights",
-	    "departure_id": "JFK",
-	    "arrival_id": "CDG",
-	    "outbound_date": "2024-01-05",
-	    "return_date": "2024-01-11",
-	    "currency": "USD",
-	    "hl": "en",
-	    "api_key": "9c50a567049a317c3d0e7c6f50e377ef15c452d4ee3dd9f47d1eb0e8edc54293",
-	}
-	
-	search := g.NewGoogleSearch(parameter, "9c50a567049a317c3d0e7c6f50e377ef15c452d4ee3dd9f47d1eb0e8edc54293")
-	result, err := execute(&search, "/search", "json")
-	if err != nil {
-		log.Printf("[ERROR] Error getting results from Google Search -> %s\n", err)
-	}
+	// Iterate through those flights and append them to a ResponseFlights array
+	var result_flights []ResponseFlights
+	for idx, bestflight := range all_flights_api_response.BestFlights {
+		for _, flight := range bestflight.Flights {
+			fmt.Printf("Flight #%d: Departure Airport: %s, Arrival Airport: %s, Departure Time: %s, Arrival Time: %s; Flight Duration: %dmin, Price: $%d\n", idx, flight.DepartureAirport.Name, flight.ArrivalAirport.Name, flight.DepartureAirport.Time, flight.ArrivalAirport.Time, bestflight.TotalDuration, bestflight.Price)
 
-	defer result.Body.Close()
-	body, err := io.ReadAll(result.Body)
-	if err != nil {
-		log.Printf("[ERROR] Error getting response body -> %s\n", err)
-	}
+			result_flights = append(result_flights, ResponseFlights{
+				Airline: flight.Airline,
+				DepartureAirport: flight.DepartureAirport.Name,
+				DepartureTime: flight.DepartureAirport.Time,
+				ArrivalAirport: flight.ArrivalAirport.Name,
+				ArrivalTime: flight.ArrivalAirport.Time,
+				Duration: bestflight.TotalDuration,
+				Price: bestflight.Price,
 
-	err = json.Unmarshal(body, &flights)
-	if err != nil {
-		log.Printf("[ERROR] Error Unmarshaling json response -> %s\n", err)
-	}
-	return &flights
-}
-
-// This is straight from serpapi's source code but for one minor change
-// Inmstead of being a method of the Search type, it takes a parameter of type Search.
-func execute(search *g.Search, path string, output string) (*http.Response, error) {
-	query := url.Values{}
-	if search.Parameter != nil {
-		for k, v := range search.Parameter {
-			query.Add(k, v)
+			})
 		}
 	}
+	return result_flights
+}
 
-	// api_key
-	if len(search.ApiKey) != 0 {
-		query.Add("api_key", search.ApiKey)
-	}
+func GetCityAirportCode(city string) string {
+	cityAirportMap := make(map[string]string)
+	// Add major cities and their airport codes to the map
+	cityAirportMap["New York"] = "JFK"
+	cityAirportMap["Los Angeles"] = "LAX"
+	cityAirportMap["Chicago"] = "ORD"
+	cityAirportMap["London"] = "LHR"
+	cityAirportMap["Tokyo"] = "HND"
+	cityAirportMap["Paris"] = "CDG"
+	cityAirportMap["Beijing"] = "PEK"
+	cityAirportMap["Dubai"] = "DXB"
+	cityAirportMap["Sydney"] = "SYD"
+	cityAirportMap["Toronto"] = "YYZ"
+	cityAirportMap["Hong Kong"] = "HKG"
+	cityAirportMap["Mumbai"] = "BOM"
+	cityAirportMap["Singapore"] = "SIN"
+	cityAirportMap["Istanbul"] = "IST"
+	cityAirportMap["San Francisco"] = "SFO"
+	cityAirportMap["Dublin"] = "DUB"
+	cityAirportMap["Frankfurt"] = "FRA"
+	cityAirportMap["Mexico City"] = "MEX"
+	cityAirportMap["Seoul"] = "ICN"
+	cityAirportMap["Sao Paulo"] = "GRU"
+	cityAirportMap["Moscow"] = "SVO"
+	cityAirportMap["Bangkok"] = "BKK"
+	cityAirportMap["Cairo"] = "CAI"
+	cityAirportMap["Amsterdam"] = "AMS"
+	cityAirportMap["Johannesburg"] = "JNB"
+	cityAirportMap["Rome"] = "FCO"
+	cityAirportMap["Madrid"] = "MAD"
+	cityAirportMap["Berlin"] = "TXL"
+	cityAirportMap["Vienna"] = "VIE"
+	cityAirportMap["Athens"] = "ATH"
+	cityAirportMap["Stockholm"] = "ARN"
+	cityAirportMap["Lisbon"] = "LIS"
+	cityAirportMap["New Delhi"] = "DEL"
+	cityAirportMap["Oslo"] = "OSL"
+	cityAirportMap["Warsaw"] = "WAW"
+	cityAirportMap["Brussels"] = "BRU"
+	cityAirportMap["Copenhagen"] = "CPH"
+	cityAirportMap["Helsinki"] = "HEL"
+	cityAirportMap["Buenos Aires"] = "EZE"
+	cityAirportMap["Lima"] = "LIM"
+	cityAirportMap["Bogota"] = "BOG"
+	cityAirportMap["Caracas"] = "CCS"
+	cityAirportMap["Lagos"] = "LOS"
+	cityAirportMap["Nairobi"] = "NBO"
+	cityAirportMap["Cape Town"] = "CPT"
+	cityAirportMap["Montreal"] = "YUL"
+	cityAirportMap["Vancouver"] = "YVR"
+	cityAirportMap["Melbourne"] = "MEL"
+	cityAirportMap["Auckland"] = "AKL"
+	cityAirportMap["Miami"] = "MIA"
 
-	// engine
-	if len(query.Get("engine")) == 0 {
-		query.Set("engine", search.Engine)
-	}
-
-	// source programming language
-	query.Add("source", "go")
-
-	// set output
-	query.Add("output", output)
-
-	endpoint := "https://serpapi.com" + path + "?" + query.Encode()
-	rsp, err := search.HttpSearch.Get(endpoint)
-	if err != nil {
-		return nil, err
-	}
-	return rsp, nil
+	return cityAirportMap[city]
 }

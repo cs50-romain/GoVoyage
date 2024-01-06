@@ -93,6 +93,9 @@
         <div id="results">
             <h2>Depart Flight Results</h2>
             <ul id="flight-list">
+                {{if .Message}}
+                    <h5 style="color: #FF3030">{{.Message}}</h5>
+                {{end}}
                 {{range .Flights}}
                     <li>{{.Airline}} Airline - Departure: {{.DepartureTime}}, Arrival: {{.ArrivalTime}}, Price: ${{.Price}}</li>
                 {{end}}
@@ -102,7 +105,7 @@
             <h2>Return Flight Results</h2>
             <ul id="return-flight-list">
                 {{range .ReturnFlights}}
-                    <li>{{.Airline}} - Departure: {{.DepartureTime}}, Arrival: {{.ArrivalTime}}, Price: ${{.Price}}</li>
+                    <li>{{.Airline}} Airline - Departure: {{.DepartureTime}}, Arrival: {{.ArrivalTime}}, Price: ${{.Price}}</li>
                 {{end}}
             </ul>
         </div>

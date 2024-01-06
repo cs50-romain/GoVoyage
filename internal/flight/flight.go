@@ -34,7 +34,7 @@ func New(airline string, departure, arrival string, price int) *RequestedFlight 
 func GetFlights(departure_city, arrival_city, departure_date, return_date string) []ResponseFlights {
 	departure_airport_code := GetCityAirportCode(departure_city)
 	arrival_airport_code := GetCityAirportCode(arrival_city)
-	all_flights_api_response := flightapi.GetFlights(departure_airport_code, arrival_airport_code, "2024-01-10", "2024-01-20")
+	all_flights_api_response := flightapi.GetFlights(departure_airport_code, arrival_airport_code, departure_date, return_date)
 
 	// Iterate through those flights and append them to a ResponseFlights array
 	var result_flights []ResponseFlights

@@ -30,8 +30,6 @@ func flightsHandler(c *gin.Context) {
 	start := c.PostForm("startDate")
 	end := c.PostForm("endDate")
 	
-	log.Printf("Origin: %s, Destination: %s\nStart Date: %s, End Date: %s\n", origin, dest, start, end)
-	
 	// Need to get the flights based on use demand
 	departure_flights, err = flight.GetFlights(origin, dest, start, end)
 	if err != nil {
@@ -47,7 +45,6 @@ func flightsHandler(c *gin.Context) {
 func main() {
 	router := gin.Default()
 	router.LoadHTMLGlob("templates/*")
-	log.Print("This is a test")
 
 	router.GET("/", indexHandler)
 	router.POST("/flights", flightsHandler)

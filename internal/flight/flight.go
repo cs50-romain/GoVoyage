@@ -37,15 +37,15 @@ func GetFlights(departure_city, arrival_city, departure_date, return_date string
 	arrival_airport_code := GetCityAirportCode(arrival_city)
 	all_flights_api_response, err := flightapi.GetFlights(departure_airport_code, arrival_airport_code, departure_date, return_date)
 	if err != nil {
-		log.Printf("[ERROR] API JSON Response Error -> %s\n", "error")
+		log.Printf("[ERROR] API JSON Response Error -> %s\n", err)
 		return nil, err
 	}
 
 	// Iterate through those flights and append them to a ResponseFlights array
 	var result_flights []ResponseFlights
-	for idx, bestflight := range all_flights_api_response.BestFlights {
+	for _, bestflight := range all_flights_api_response.BestFlights {
 		for _, flight := range bestflight.Flights {
-			fmt.Printf("Flight #%d: Departure Airport: %s, Arrival Airport: %s, Departure Time: %s, Arrival Time: %s; Flight Duration: %dmin, Price: $%d\n", idx, flight.DepartureAirport.Name, flight.ArrivalAirport.Name, flight.DepartureAirport.Time, flight.ArrivalAirport.Time, bestflight.TotalDuration, bestflight.Price)
+			//fmt.Printf("Flight #%d: Departure Airport: %s, Arrival Airport: %s, Departure Time: %s, Arrival Time: %s; Flight Duration: %dmin, Price: $%d\n", idx, flight.DepartureAirport.Name, flight.ArrivalAirport.Name, flight.DepartureAirport.Time, flight.ArrivalAirport.Time, bestflight.TotalDuration, bestflight.Price)
 
 			result_flights = append(result_flights, ResponseFlights{
 				Airline: flight.Airline,
@@ -115,6 +115,7 @@ func GetCityAirportCode(city string) string {
 	cityAirportMap["Melbourne"] = "MEL"
 	cityAirportMap["Auckland"] = "AKL"
 	cityAirportMap["Miami"] = "MIA"
+	cityAirportMap["Baltimore"] = "BWI"
 
 	return cityAirportMap[city]
 }

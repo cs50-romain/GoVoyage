@@ -3,6 +3,7 @@ package flight
 import (
 	"cs50-romain/GoVoyage/internal/flightapi"
 	"fmt"
+	"log"
 )
 
 type ResponseFlights struct {
@@ -31,10 +32,14 @@ func New(airline string, departure, arrival string, price int) *RequestedFlight 
 	}
 }
 
-func GetFlights(departure_city, arrival_city, departure_date, return_date string) []ResponseFlights {
+func GetFlights(departure_city, arrival_city, departure_date, return_date string) ([]ResponseFlights, error) {
 	departure_airport_code := GetCityAirportCode(departure_city)
 	arrival_airport_code := GetCityAirportCode(arrival_city)
-	all_flights_api_response := flightapi.GetFlights(departure_airport_code, arrival_airport_code, departure_date, return_date)
+	all_flights_api_response, err := flightapi.GetFlights(departure_airport_code, arrival_airport_code, departure_date, return_date)
+	if err != nil {
+		log.Printf("[ERROR] API JSON Response Error -> %s\n", "error")
+		return nil, err
+	}
 
 	// Iterate through those flights and append them to a ResponseFlights array
 	var result_flights []ResponseFlights
@@ -54,7 +59,7 @@ func GetFlights(departure_city, arrival_city, departure_date, return_date string
 			})
 		}
 	}
-	return result_flights
+	return result_flights, nil
 }
 
 func GetCityAirportCode(city string) string {

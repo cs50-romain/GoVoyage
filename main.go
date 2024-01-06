@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	//"time"
 
 	"cs50-romain/GoVoyage/internal/flight"
 
@@ -13,12 +12,15 @@ import (
 
 var departure_flights []flight.ResponseFlights
 var return_flights []flight.ResponseFlights
+var err error
+var message string
 
 func indexHandler(c *gin.Context) {
 	fmt.Println(return_flights)
 	c.HTML(http.StatusOK, "index.tmpl", gin.H{
 		"Flights": departure_flights,
 		"ReturnFlights": return_flights,
+		"Message": message,
 	})
 }
 
@@ -27,12 +29,19 @@ func flightsHandler(c *gin.Context) {
 	dest := c.PostForm("destination")
 	start := c.PostForm("startDate")
 	end := c.PostForm("endDate")
-
+	
 	log.Printf("Origin: %s, Destination: %s\nStart Date: %s, End Date: %s\n", origin, dest, start, end)
 	
 	// Need to get the flights based on use demand
-	departure_flights = flight.GetFlights(origin, dest, start, end)
-	return_flights = flight.GetFlights(dest, origin, end, end)
+	departure_flights, err = flight.GetFlights(origin, dest, start, end)
+	if err != nil {
+		// Create a message for user
+		message = err.Error()
+	}
+	return_flights, err = flight.GetFlights(dest, origin, end, end)
+	if err != nil {
+		message = err.Error()
+	}
 }
 
 func main() {

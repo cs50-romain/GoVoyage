@@ -11,6 +11,10 @@ import (
 	//m "github.com/mitchellh/mapstructure"
 )
 
+type APIError struct {
+	Message string `json:"error"`
+}
+
 type Flights struct {
 	SearchMetadata struct {
 		ID               string  `json:"id,omitempty"`
@@ -115,9 +119,14 @@ type Flights struct {
 		PriceHistory      [][]int `json:"price_history,omitempty"`
 	} `json:"price_insights,omitempty"`
 }
+
+func (ae *APIError) Error() string {
+	return ae.Message
+}
 // API Stuff
 
-func GetFlights(departure_id, arrival_id, departure_date, return_date string) *Flights {
+func GetFlights(departure_id, arrival_id, departure_date, return_date string) (*Flights, error) {
+	var apierr APIError
 	var flights Flights
 	parameter := map[string]string{
 	    "engine": "google_flights",
@@ -142,13 +151,22 @@ func GetFlights(departure_id, arrival_id, departure_date, return_date string) *F
 		log.Printf("[ERROR] Error getting response body -> %s\n", err)
 	}
 
-	log.Printf("[INFO] API json response -> %s\n", string(body))
+	//log.Printf("[INFO] API json response -> %s\n", string(body))
 
 	err = json.Unmarshal(body, &flights)
 	if err != nil {
 		log.Printf("[ERROR] Error Unmarshaling json response -> %s\n", err)
 	}
-	return &flights
+
+	err = json.Unmarshal(body, &apierr)
+	if err != nil {
+		log.Printf("[ERROR] Error Unmarshaling json response -> %s\n", err)
+	}
+
+	if apierr.Message != "" {
+		return nil, &apierr
+	}
+	return &flights, nil
 }
 
 // This is straight from serpapi's source code but for one minor change

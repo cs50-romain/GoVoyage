@@ -142,6 +142,8 @@ func GetFlights(departure_id, arrival_id, departure_date, return_date string) *F
 		log.Printf("[ERROR] Error getting response body -> %s\n", err)
 	}
 
+	log.Printf("[INFO] API json response -> %s\n", string(body))
+
 	err = json.Unmarshal(body, &flights)
 	if err != nil {
 		log.Printf("[ERROR] Error Unmarshaling json response -> %s\n", err)
@@ -176,6 +178,7 @@ func execute(search *g.Search, path string, output string) (*http.Response, erro
 	query.Add("output", output)
 
 	endpoint := "https://serpapi.com" + path + "?" + query.Encode()
+	log.Printf("[INFO] API Request -> %s\n", endpoint)
 	rsp, err := search.HttpSearch.Get(endpoint)
 	if err != nil {
 		return nil, err

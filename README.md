@@ -27,6 +27,8 @@ This is a simple web application that allows users to compare plane tickets base
 ## Usage
 
 Visit the online version of the project at [govoyage.onrender.com](https://govoyage.onrender.com/) to use the Plane Ticket Comparison Tool. Simply fill out the form with your travel details and click the "Search Flights" button to view available flights.
+![image](https://github.com/cs50-romain/GoVoyage/assets/123638985/060bfd5e-ff59-44c7-8ffb-372907d79b6a)
+
 
 ## Optional Enhancements
 
